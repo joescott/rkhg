@@ -1,0 +1,28 @@
+MainWindow {
+ /*   background-color: rgb(75,75,75); */
+ /*   color: black; */
+    background-image: url(:icon);
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    background-position:right bottom;
+}
+
+QToolTip {
+    border: 1px solid gray;
+    background: rgb(0,51,153);
+    color: rgb(102,153,52);
+}
+
+QTextEdit#Help {
+     border: 2px solid gray;
+     border-radius: 10px;
+     padding: 0 8px;
+     background: rgb(0,51,153);
+     color: rgb(102,153,52);
+}
+
+QTreeWidget {
+    border: 2px solid gray;
+    background: rgb(0,51,153);
+    color: rgb(102,153,52);
+}

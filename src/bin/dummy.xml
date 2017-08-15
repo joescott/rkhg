@@ -1,0 +1,137 @@
+<headerconfig>
+ <group docs="Configuration options related to framework" name="Framework">
+  <option docs="Specify the maximum number of state machine applications (SMA) to be used &#xa;         by the application (can be a number in the range [1..64])." type="int" defval="8" id="RKH_MAX_SMA" maxval="64" minval="1"/>
+  <option docs="TEST" type="int" defval="8" id="TRKH_MAX_SMA" maxval="64" minval="0"/>
+  <option depends="TRKH_MAX_SMA&lt;3" docs="If the dynamic event support (see #RKH_EN_DYNAMIC_EVENT) is set to 1, RKH allows to use event with parameters, defer/recall, allocating and recycling dynamic events, among other features." type="bool" defval="1" id="RKH_EN_DYNAMIC_EVENT"/>
+  <option docs="If the dynamic event support is enabled (see #RKH_EN_DYNAMIC_EVENT) then &#xa;         the #RKH_MAX_EPOOL can be used to specify the maximum number of fixed-size&#xa;         memory block pools to be used by the application (can be a number in the range [0..256]).&#xa;         Note that a value of 0 will completely suppress the memory pool services." type="int" defval="4" id="RKH_MAX_EPOOL" maxval="256" minval="0"/>
+  <option docs="Specify the size of the event signal. The valid values [in bits] are 8, 16 or 32. Default is 8.&#xa;         The higher the signal size, the higher the event structure size and therefore more memory consumption.&#xa;         See #RKHE_T data type." type="enum" defval="8" id="RKH_SIZEOF_EVENT">
+   <value name="8"/>
+   <value name="16"/>
+   <value name="32"/>
+  </option>
+  <option docs="Specify the data type of event size. The valid values [in bits] are 8, 16 or 32. Default is 8.&#xa;         See #RKHES_T, rkh_epool_register(), and RKH_ALLOC_EVENT()." type="enum" defval="8" id="RKH_SIZEOF_ESIZE">
+   <value name="8"/>
+   <value name="16"/>
+   <value name="32"/>
+  </option>
+  <option docs="If the #RKH_EN_DEFERRED_EVENT is set to 1 and the dynamic event support is enabled &#xa;         (see #RKH_EN_DYNAMIC_EVENT), RKH enables the defer and recall event features." type="bool" defval="1" id="RKH_EN_DEFERRED_EVENT"/>
+  <option docs="If the #RKH_ASSERT_EN is set to 0 the checking assertions are disabled. In particular macros&#xa;         RKHASSERT(), RKHREQUIRE(), RKHENSURE(), RKHINVARIANT(), and RKHERROR() do NOT evaluate&#xa;         the test condition passed as the argument to these macros. One notable exception is the macro RKHALLEGE(),&#xa;         that still evaluates the test condition, but does not report assertion failures when the #RKH_ASSERT_EN is enabled." type="bool" defval="1" id="RKH_ASSERT_EN"/>
+  <option docs="If the #RKH_HK_EN_SIGNAL is set to 1, RKH will invoke the signal  hook function rkh_hk_signal() when the producer&#xa;         of an event directly posts the event to the event queue of the consumer SMA. When this is set the application&#xa;         must provide the hook function. " type="bool" defval="0" id="RKH_HK_EN_DISPATCH"/>
+  <option docs="If the #RKH_HK_EN_SIGNAL is set to 1, RKH will invoke the signal  hook function rkh_hk_signal() when the producer &#xa;         of an event directly  posts the event to the event queue of the consumer SMA. When this is set the application&#xa;         must provide the hook function." type="bool" defval="0" id="RKH_HK_EN_SIGNAL"/>
+  <option docs="If the #RKH_HK_EN_TIMEOUT is set to 1, RKH will invoke the timeout  hook function rkh_hk_timeout() when a timer&#xa;         expires just before the assigned event is directly posted into the state machine application queue. &#xa;         When this is set the application must provide the hook function. " type="bool" defval="0" id="RKH_HK_EN_TIMEOUT"/>
+  <option docs="If the #RKH_HK_EN_START is set to 1, RKH will invoke the start  hook function rkh_hk_start() &#xa;         just before the RKH takes over control of  the application. When this is set the application&#xa;         must provide the hook function. " type="bool" defval="1" id="RKH_HK_EN_START"/>
+  <option docs="If the #RKH_HK_EN_EXIT is set to 1, RKH will invoke the exit &#xa;         hook function just before it returns to the underlying OS/RTOS. Usually, &#xa;         the rkh_hk_exit() is useful when executing clean-up code upon SMA &#xa;         terminate or framework exit.&#xa;         When this is set the application must provide the hook function. " type="bool" defval="1" id="RKH_HK_EN_EXIT"/>
+  <option docs="If the #RKH_SMA_EN_IEVENT is set to 1 then an initial event could be &#xa;         be passed to state machine application when it starts, like an argc/argv. &#xa;         Also, the #RKH_SMA_EN_IEVENT changes the initial action prototype." type="bool" defval="0" id="RKH_SMA_EN_IEVENT"/>
+  <option docs="If the #RKH_EN_SMA_THREAD is set to 1, each SMA (active object) has its own &#xa;         thread of execution." type="bool" defval="1" id="RKH_EN_SMA_THREAD"/>
+  <option docs="If the #RKH_EN_SMA_THREAD and #RKH_EN_SMA_THREAD_DATA are set to 1, each &#xa;         SMA (active object) has its own thread of execution and its own object data." type="bool" defval="1" id="RKH_EN_SMA_THREAD_DATA"/>
+  <option docs="If the #RKH_EN_NATIVE_SCHEDULER is set to 1 then RKH will include the &#xa;         simple, cooperative, and nonpreemptive scheduler RKHS.&#xa;         When #RKH_EN_NATIVE_SCHEDULER is enabled RKH also will automatically &#xa;         define #RKH_EQ_TYPE, RKH_SMA_BLOCK(), RKH_SMA_READY(), RKH_SMA_UNREADY(), &#xa;         and assume the native priority scheme." type="bool" defval="0" id="RKH_EN_NATIVE_SCHEDULER"/>
+  <option docs="If the #RKH_EN_NATIVE_EQUEUE is set to 1 and the native event queue is &#xa;         enabled (see #RKH_RQ_EN) then RKH will include its own implementation of &#xa;         rkh_sma_post_fifo(), rkh_sma_post_lifo(), and rkh_sma_get() functions." type="bool" defval="1" id="RKH_EN_NATIVE_EQUEUE"/>
+  <option docs="If the #RKH_EN_NATIVE_DYN_EVENT is set to 1 and the native fixed-size &#xa;         memory block facility is enabled (see #RKH_MP_EN) then RKH will include &#xa;         its own implementation of dynamic memory management.&#xa;         When #RKH_EN_NATIVE_DYN_EVENT is enabled RKH also will automatically &#xa;         define RKH_DYNE_TYPE, RKH_DYNE_INIT(), RKH_DYNE_GET_ESIZE(), &#xa;         RKH_DYNE_GET(), and RKH_DYNE_PUT()." type="bool" defval="1" id="RKH_EN_NATIVE_DYN_EVENT"/>
+  <option docs="If the #RKH_EN_REENTRANT is set to 1, the RKH event dispatch allows to be &#xa;         invoked from several threads of executions. Enable this only if the &#xa;         application is based on a multi-thread architecture." type="bool" defval="0" id="RKH_EN_REENTRANT"/>
+ </group>
+ <group docs="Configuration options related to state machine applications" name="Machine Application">
+  <option docs="If the #RKH_SMA_EN_ID is set to 1 then RKH allows to add a numerical &#xa;         value to every state machine. This number allows to uniquely identify a &#xa;         state machine application. " type="bool" defval="0" id="RKH_SMA_EN_ID"/>
+  <option docs="If the #RKH_SMA_EN_GET_INFO is set to 1 then RKH will include the &#xa;         rkh_clear_info() and rkh_get_info() functions." type="bool" defval="0" id="RKH_SMA_EN_GET_INFO"/>
+  <option docs="If the #RKH_SMA_EN_STATE_ID is set to 1 then RKH allows to add a numerical &#xa;         value to every state and pseudostate. This number allows to uniquely &#xa;         identify a state and/or pseudostate." type="bool" defval="0" id="RKH_SMA_EN_STATE_ID"/>
+  <option docs="If the #RKH_SMA_EN_PPRO is set to 1 then RKH allows to reference a event &#xa;         preprocessor to any basic state. Aditionally, by means of single &#xa;         inheritance in C it could be used as state s abstract data. &#xa;         Moreover, implementing the single inheritance in C is very simply by &#xa;         literally embedding the base type, #RKHPPRO_T in this case, as the first &#xa;         member of the derived structure. See \a prepro member of #RKHST_T &#xa;         structure for more information." type="bool" defval="0" id="RKH_SMA_EN_PPRO"/>
+  <option docs="If the #RKH_SMA_EN_HCAL is set to 1, the RKH allows state nesting. &#xa;         When #RKH_SMA_EN_HCAL is set to 0 some important features of RKH are not &#xa;         included: state nesting, composite state, history (shallow and deep) &#xa;         pseudostate, entry action, and exit action." type="bool" defval="1" id="RKH_SMA_EN_HCAL"/>
+  <option docs="Specify the maximum number of hierarchical levels. The smaller this &#xa;         number, the lower the RAM consumption. Typically, the most of hierarchical &#xa;         state machines uses up to 4 levels. Currently #RKH_SMA_MAX_HCAL_DEPTH cannot &#xa;         exceed 8." type="int" defval="4" id="RKH_SMA_MAX_HCAL_DEPTH" maxval="8" minval="1"/>
+  <option docs="Specify the maximum number of linked transition segments. The smaller &#xa;         this number, the lower the RAM consumption. Typically, the most of &#xa;         hierarchical state machines uses up to 4 transition segments. &#xa;         Currently #RKH_SMA_MAX_TRC_SEGS cannot exceed 8." type="int" defval="4" id="RKH_SMA_MAX_TRC_SEGS" maxval="8" minval="1"/>
+  <option docs="If the #RKH_SMA_EN_PSEUDOSTATE is set to 1, the RKH allows pseudostates &#xa;         usage." type="bool" defval="1" id="RKH_SMA_EN_PSEUDOSTATE"/>
+  <option docs="If the #RKH_SMA_EN_DEEP_HISTORY and #RKH_SMA_EN_PSEUDOSTATE are set to 1, &#xa;         he RKH allows deep history pseudostate usage." type="bool" defval="1" id="RKH_SMA_EN_DEEP_HISTORY"/>
+  <option docs="If the #RKH_SMA_EN_SHALLOW_HISTORY and #RKH_SMA_EN_PSEUDOSTATE are set to 1, &#xa;         the RKH allows shallow history pseudostate usage." type="bool" defval="1" id="RKH_SMA_EN_SHALLOW_HISTORY"/>
+  <option docs="If the #RKH_SMA_EN_JUNCTION and #RKH_SMA_EN_PSEUDOSTATE are set to 1, the &#xa;         RKH allows junction pseudostate usage." type="bool" defval="1" id="RKH_SMA_EN_JUNCTION"/>
+  <option docs="If the #RKH_SMA_EN_CONDITIONAL and #RKH_SMA_EN_PSEUDOSTATE are set to 1, &#xa;         the RKH allows branch (or conditional) pseudostate usage." type="bool" defval="1" id="RKH_SMA_EN_CONDITIONAL"/>
+  <option docs="If the #RKH_SMA_EN_SUBMACHINE and #RKH_SMA_EN_PSEUDOSTATE are set to 1, &#xa;         the RKH allows submachine state (and exit/entry points) usage." type="bool" defval="0" id="RKH_SMA_EN_SUBMACHINE"/>
+ </group>
+ <group docs="Configuration options related to SMA action feactures" name="SMA">
+  <option docs="If the #RKH_SMA_EN_INIT_ARG_SMA is set to 1 then the initial action prototype &#xa;         will add as argument a pointer to state machine structure #RKHSMA_T. See &#xa;         #RKHINIT_T definition." type="bool" defval="1" id="RKH_SMA_EN_INIT_ARG_SMA"/>
+  <option docs="If the #RKH_SMA_EN_ENT_ARG_SMA is set to 1 then the entry action prototype &#xa;         will add as argument a pointer to state machine structure #RKHSMA_T. See &#xa;         #RKHENT_T definition." type="bool" defval="1" id="RKH_SMA_EN_ENT_ARG_SMA"/>
+  <option docs="If the #RKH_SMA_EN_EXT_ARG_SMA is set to 1 then the exit action prototype &#xa;         will add as argument a pointer to state machine structure #RKHSMA_T. See &#xa;         #RKHEXT_T definition." type="bool" defval="1" id="RKH_SMA_EN_EXT_ARG_SMA"/>
+  <option docs="If the #RKH_SMA_EN_ACT_ARG_SMA is set to 1 then the transition action &#xa;         prototype will add as argument a pointer to state machine structure &#xa;         #RKHSMA_T. See #RKHACT_T definition." type="bool" defval="1" id="RKH_SMA_EN_ACT_ARG_SMA"/>
+  <option docs="If the #RKH_SMA_EN_ACT_ARG_EVT is set to 1 then the transition action &#xa;         prototype will add as argument a pointer to ocurred event. &#xa;         See RKHACT_T definition." type="bool" defval="1" id="RKH_SMA_EN_ACT_ARG_EVT"/>
+  <option docs="If the #RKH_SMA_EN_GRD_ARG_EVT is set to 1 then the transition guard  &#xa;         prototype will add as argument a pointer to ocurred event. &#xa;         See RKHGUARD_T definition" type="bool" defval="1" id="RKH_SMA_EN_GRD_ARG_EVT"/>
+  <option docs="If the #RKH_SMA_EN_GRD_ARG_SMA is set to 1 then the transition guard  &#xa;         prototype will add as argument a pointer to state machine structure &#xa;         RKHSMA_T. See RKHGUARD_T definition." type="bool" defval="1" id="RKH_SMA_EN_GRD_ARG_SMA"/>
+  <option docs="If the #RKH_SMA_EN_PPRO_ARG_SMA is set to 1 then the event preprocessor  &#xa;         (Moore function like entry and exit actions) prototype will add as &#xa;         argument a pointer to state machine structure RKHSMA_T. See RKHPPRO_T definition." type="bool" defval="1" id="RKH_SMA_EN_PPRO_ARG_SMA"/>
+ </group>
+ <group docs="Configuration options related to trace facility" name="Trace">
+  <option docs="If the #RKH_TRC_EN is set to 1 then RKH will include the trace facility." type="bool" defval="0" id="RKH_TRC_EN"/>
+  <option depends="RKH_TRC_EN" docs="Specify the maximum number of trace events, this number is direclty &#xa;         related with the #RKH_TRC_EVENTS enumeration. The smaller this number, &#xa;         the lower the RAM consumption.&#xa;         See \c #trceftbl table." type="int" defval="8" id="RKH_TRC_MAX_EVENTS" maxval="100" minval="1"/>
+  <option docs="If the #RKH_TRC_RUNTIME_FILTER is set to 1 then RKH will include the &#xa;         runtime trace filter facility.&#xa;         When #RKH_TRC_RUNTIME_FILTER is enabled RKH also will automatically &#xa;         define RKH_FILTER_ON_GROUP(), RKH_FILTER_OFF_GROUP(), &#xa;         RKH_FILTER_ON_EVENT(), RKH_FILTER_OFF_EVENT(), &#xa;         RKH_FILTER_ON_GROUP_EVENT(), and RKH_FILTER_OFF_GROUP_EVENT() macros." type="bool" defval="1" id="RKH_TRC_RUNTIME_FILTER"/>
+  <option docs="If the #RKH_TRC_ALL is set to 1 then RKH will include all its own trace &#xa;         records." type="bool" defval="1" id="RKH_TRC_ALL"/>
+  <option docs="If the #RKH_TRC_EN_MP is set to 1 then RKH will include all trace records &#xa;         related to the native fixed-size memory blocks." type="bool" defval="0" id="RKH_TRC_EN_MP"/>
+  <option docs="If the #RKH_TRC_EN_RQ is set to 1 then RKH will include all trace records &#xa;         related to the native queues." type="bool" defval="0" id="RKH_TRC_EN_RQ"/>
+  <option docs="If the #RKH_TRC_EN_SMA is set to 1 then RKH will include all trace records &#xa;         related to the state machine applications." type="bool" defval="0" id="RKH_TRC_EN_SMA"/>
+  <option docs="If the #RKH_TRC_EN_TIM is set to 1 then RKH will include all trace records &#xa;         related to the native software timer." type="bool" defval="0" id="RKH_TRC_EN_TIM"/>
+  <option docs="If the #RKH_TRC_EN_SM is set to 1 then RKH will include all trace records &#xa;         related to the state machine (hierarchical and &quot;flat&quot;)" type="bool" defval="0" id="RKH_TRC_EN_SM"/>
+  <option docs="If the #RKH_TRC_EN_RKH is set to 1 then RKH will include all trace records &#xa;         related to the nativenative  event framework." type="bool" defval="0" id="RKH_TRC_EN_RKH"/>
+  <option docs="If the #RKH_TRC_EN_SM_INIT and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;init state machine&quot; trace record." type="bool" defval="1" id="RKH_TRC_EN_SM_INIT"/>
+  <option docs="If the #RKH_TRC_EN_SM_DCH and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;start a state machine&quot; trace record" type="bool" defval="1" id="RKH_TRC_EN_SM_DCH"/>
+  <option docs="If the #RKH_TRC_EN_SM_CLRH and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;dispatch an event to state machine&quot; trace record." type="bool" defval="1" id="RKH_TRC_EN_SM_CLRH"/>
+  <option docs="If the #RKH_TRC_EN_SM_CLRH and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;clear the history pseudostate&quot; trace record." type="bool" defval="1" id="RKH_TRC_EN_SM_TRN"/>
+  <option docs="If the #RKH_TRC_EN_SM_STATE and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;final state of transition&quot; trace record." type="bool" defval="1" id="RKH_TRC_EN_SM_STATE"/>
+  <option docs="If the #RKH_TRC_EN_SM_CLRH and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;entry state&quot; trace record." type="bool" defval="1" id="RKH_TRC_EN_SM_ENSTATE"/>
+  <option docs="If the #RKH_TRC_EN_SM_CLRH and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;number of entry and exit states in transition&quot; trace record." type="bool" defval="1" id="RKH_TRC_EN_SM_NENEX"/>
+  <option docs="If the #RKH_TRC_EN_SM_CLRH and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;number of executed actions in transition&quot; trace record." type="bool" defval="1" id="RKH_TRC_EN_SM_NTRNACT"/>
+  <option docs="If the #RKH_TRC_EN_SM_CLRH and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;state or pseudostate in a compound transition&quot; trace record." type="bool" defval="1" id="RKH_TRC_EN_SM_CSTATE"/>
+  <option docs="If the #RKH_TRC_EN_SM_CLRH and #RKH_TRC_EN_SM are set to 1 then RKH will &#xa;         include the &quot;returned code from dispatch function&quot; trace record." type="bool" defval="1" id="RKH_TRC_EN_SM_DCH_RC"/>
+  <option docs="If the #RKH_TRC_EN_NSEQ is set to 1 then RKH will add to the trace record an &#xa;         incremental number (1-byte), used like a sequence number.&#xa;         See RKH_TRC_NSEQ() and RKH_TRC_HDR() macros." type="bool" defval="1" id="RKH_TRC_EN_NSEQ"/>
+  <option docs="If the #RKH_TRC_EN_CHK is set to 1 then RKH will add to the trace record a &#xa;         checksum (1-byte). See RKH_TRC_CHK() macro." type="bool" defval="1" id="RKH_TRC_EN_CHK"/>
+  <option docs="If the #RKH_TRC_EN_TSTAMP is set to 1 then RKH will add to the trace record &#xa;         a timestamp field. Its configurable by means of #RKH_TRC_SIZEOF_TSTAMP." type="bool" defval="1" id="RKH_TRC_EN_TSTAMP"/>
+  <option docs="Specify the number of bytes (size) used by the trace record timestamp. &#xa;         The valid values [in bits] are 8, 16 or 32. Default is 16." type="enum" defval="16" id="RKH_TRC_SIZEOF_TSTAMP">
+   <value name="8"/>
+   <value name="16"/>
+   <value name="32"/>
+  </option>
+  <option docs="Specify the maximum number of trace events in the stream. The smaller &#xa;         this number, the lower the RAM consumption." type="int" defval="256" id="RKH_TRC_SIZEOF_STREAM" maxval="2048" minval="1"/>
+  <option docs="Specify the size of void pointer. The valid values [in bits] are &#xa;         16 or 32. Default is 16. See RKH_TRC_SYM() macro." type="enum" defval="16" id="RKH_TRC_SIZEOF_POINTER">
+   <value name="8"/>
+   <value name="16"/>
+   <value name="32"/>
+  </option>
+ </group>
+ <group docs="Configuration options related to queue (by reference) facility" name="Queue">
+  <option docs="If the #RKH_RQ_EN is set to 1 then RKH will include the native queue facility." type="bool" defval="1" id="RKH_RQ_EN"/>
+  <option docs="Specify the maximum number of elements that any queue can contain. &#xa;         The valid values [in bits] are 8, 16 or 32. Default is 8. &#xa;         See #RKH_RQNE_T type." type="enum" defval="8" id="RKH_RQ_SIZEOF_NELEM">
+   <value name="8"/>
+   <value name="16"/>
+   <value name="32"/>
+  </option>
+  <option docs="If the #RKH_RQ_EN_GET_LWMARK is set to 1 then RKH allows to known the &#xa;         minimum number of free elements ever in the queue (low-watermark ). &#xa;         This provides valuable empirical data for proper sizing of the queue.&#xa;         See rkh_rq_get_lwm() function." type="bool" defval="1" id="RKH_RQ_EN_GET_LWMARK"/>
+  <option docs="If the #RKH_RQ_EN_GET_INFO is set to 1 then RKH allows to collect and &#xa;         retrives performance information for a particular queue.&#xa;         See rkh_rq_get_info() and rkh_rq_clear_info() functions." type="bool" defval="0" id="RKH_RQ_EN_GET_INFO"/>
+  <option docs="If the #RKH_RQ_EN_READ is set to 1 then RKH will include the rkh_rq_read() &#xa;         function that allows read an element from a queue without remove it.&#xa;         See rkh_rq_read() function." type="bool" defval="1" id="RKH_RQ_EN_READ"/>
+  <option docs="If the #RKH_RQ_EN_DEPLETE is set to 1 then RKH will include the &#xa;         rkh_rq_deplete() function that empties the contents of the queue and &#xa;         eliminates all stored elements.&#xa;         See rkh_rq_deplete() function." type="bool" defval="1" id="RKH_RQ_EN_DEPLETE"/>
+  <option docs="If the #RKH_RQ_EN_IS_FULL is set to 1 then RKH will include the &#xa;         rkh_rq_is_full() function that allows to known if a queue is full.&#xa;         See rkh_rq_is_full() function." type="bool" defval="1" id="RKH_RQ_EN_IS_FULL"/>
+  <option docs="If the #RKH_RQ_EN_GET_NELEMS is set to 1 then RKH will include the &#xa;         rkh_rq_get_num() function that returns the number of elements currently &#xa;         in the queue.&#xa;         See rkh_rq_get_num() function." type="bool" defval="1" id="RKH_RQ_EN_GET_NELEMS"/>
+  <option docs="If the #RKH_RQ_EN_PUT_LIFO is set to 1 then RKH will include the &#xa;         rkh_rq_put_lifo() function that puts an element on a queue in a LIFO &#xa;         manner.&#xa;         See rkh_rq_put_lifo() function." type="bool" defval="1" id="RKH_RQ_EN_PUT_LIFO"/>
+ </group>
+ <group docs="Configuration options related to fixed-sized memory block facility" name="Memory">
+  <option docs="If the #RKH_MP_EN is set to 1 then RKH will include the native &#xa;         fixed-size memory block management." type="bool" defval="1" id="RKH_MP_EN"/>
+  <option docs="" type="bool" defval="0" id="RKH_MP_REDUCED"/>
+  <option docs="Specify size of number of memory block size. The valid values [in bits] are 8, 16 or 32.&#xa;         Default is 8. See #RKH_MPNB_T type." type="enum" defval="8" id="RKH_MP_SIZEOF_BSIZE">
+   <value name="8"/>
+   <value name="16"/>
+   <value name="32"/>
+  </option>
+  <option docs="Specify the size of memory block size. The valid values [in bits] are &#xa;         8, 16 or 32. Default is 8. See #RKH_MPBS_T type." type="enum" defval="8" id="RKH_MP_SIZEOF_NBLOCK">
+   <value name="8"/>
+   <value name="16"/>
+   <value name="32"/>
+  </option>
+  <option docs="If the #RKH_MP_EN_GET_BSIZE is set to 1 then RKH will include the &#xa;         rkh_mp_get_blksize() function that returns the size of memory block in &#xa;         bytes. See rkh_mp_get_blksize() function." type="bool" defval="1" id="RKH_MP_EN_GET_BSIZE"/>
+  <option docs="If the #RKH_MP_EN_GET_NFREE is set to 1 then RKH will include the &#xa;         rkh_mp_get_nfree() function that returns the current number of free &#xa;         memory blocks in the pool.&#xa;         See rkh_mp_get_nfree() function." type="bool" defval="1" id="RKH_MP_EN_GET_NFREE"/>
+  <option docs="If the #RKH_MP_EN_GET_LWM is set to 1 then RKH will include the &#xa;         rkh_mp_get_low_wmark() function that returns the lowest number of free &#xa;         blocks ever present in the pool. This number provides valuable empirical &#xa;         data for proper sizing of the memory pool.&#xa;         See rkh_mp_get_low_wmark() function." type="bool" defval="1" id="RKH_MP_EN_GET_LWM"/>
+  <option docs="If the #RKH_MP_EN_GET_INFO is set to 1 then RKH will include the &#xa;         rkh_mp_get_info() function that retrieves performance information for &#xa;         a particular memory pool. See rkh_mp_get_info() function." type="bool" defval="0" id="RKH_MP_EN_GET_INFO"/>
+ </group>
+ <group docs="Configuration options related to software timer facility" name="Times">
+  <option docs="If the #RKH_RQ_EN is set to 1 then RKH will include the native software &#xa;         timer facility." type="bool" defval="1" id="RKH_TIM_EN"/>
+  <option docs="Specify the dynamic range of the time delays measured in clock ticks &#xa;         (maximum number of ticks). The valid values [in bits] are 8, 16 or 32. &#xa;         Default is 8." type="enum" defval="16" id="RKH_TIM_SIZEOF_NTIMER">
+   <value name="8"/>
+   <value name="16"/>
+   <value name="32"/>
+  </option>
+  <option docs="If the #RKH_TIM_EN_HOOK is set to 1 then RKH will invoke a hook function &#xa;         when a timer expires. When this is set the application must provide the &#xa;         hook function." type="bool" defval="1" id="RKH_TIM_EN_HOOK"/>
+  <option docs="If the #RKH_MP_EN_GET_LWM is set to 1 then RKH will include the &#xa;         rkh_mp_get_low_wmark() function that returns the lowest number of free &#xa;         blocks ever present in the pool. This number provides valuable empirical &#xa;         data for proper sizing of the memory pool.&#xa;         See rkh_mp_get_low_wmark() function." type="bool" defval="1" id="RKH_TIM_EN_RESTART"/>
+  <option docs="If the #RKH_MP_EN_GET_INFO is set to 1 then RKH will include the &#xa;         rkh_mp_get_info() function that retrieves performance information for &#xa;         a particular memory pool. See rkh_mp_get_info() function." type="bool" defval="1" id="RKH_TIM_EN_GET_INFO"/>
+ </group>
+</headerconfig>

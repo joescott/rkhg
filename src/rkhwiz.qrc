@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/add.png</file>
+        <file>images/del.png</file>
+        <file>images/file.png</file>
+        <file>images/folder.png</file>
+        <file>images/refresh.png</file>
+        <file>theme.css</file>
+        <file alias="icon">images/rkhwiz.png</file>
+        <file alias="next">images/1rightarrow.png</file>
+        <file alias="back">images/1leftarrow.png</file>
+        <file alias="splash">images/splash.png</file>
+    </qresource>
+</RCC>
